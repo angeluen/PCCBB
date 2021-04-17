@@ -83,19 +83,7 @@
 	<select id="selectBossList" resultType="model.Boss_count">
 		select * from boss_count
 	</select>
-	<select id="selectChar" parameterType="String"
-		resultType="model.Character_db">
-		select * from
-		(select * from character_db order by length(c_name) asc)
-		where c_keyword like #{keyword} and rownum= 1
-	</select>
-	<select id="selectCharAll" resultType="model.Character_db">
-		select * from character_db
-	</select>
-	<select id="selectCharLoca" resultType="model.Character_db">
-		select * from character_db where c_position=#{location} order by c_location
-		asc
-	</select>
+
 	<select id="selectRN" resultType="model.Boss_count">
 		select * from boss_count
 		where rownum= 1

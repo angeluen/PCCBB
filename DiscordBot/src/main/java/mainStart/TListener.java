@@ -38,6 +38,14 @@ public class TListener extends ListenerAdapter {
 		Guild guild = event.getGuild();
 		String message = msg.getContentRaw();
 
+		//엔루 설정
+		//
+		if(spmsg[0].equals("!코노하"))
+		{
+			tc.sendMessage("헤으응").queue();
+		}
+		//
+		
 		if (spmsg[0].equals("!권한")&&user.getAsMention().equals("<@363657198347485186>")) {
 			String mem=spmsg[1].replace("<", "").replace(">", "").replace("!", "").replace("@", "");
 			Member member= guild.getMemberById(mem);
