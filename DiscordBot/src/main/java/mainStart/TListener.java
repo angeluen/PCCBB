@@ -44,7 +44,14 @@ public class TListener extends ListenerAdapter {
 		{
 			tc.sendMessage("헤으응").queue();
 		}
-		//
+		//soulluna 설정
+		/*
+		 * 	기획의도
+		 * 1. 참전 : 참전을 입력 할 시 현재 보스에 참전이 되며, 딜량입력을 20분동안 하지 않으면 자동으로 참전취소가 된다.
+		 * 2. 딜량입력 : 딜량입력을 입력 시, 참전이 된 사람이라면 딜량이 입력되며, 쿄우카봇이 20분 뒤 혹은 딜량입력 종료 메시지를 받으면 참전한 사람의 딜량을 정렬해서 보여준다.
+		 * 3. 반드시 필요한 정보 : 보스 회차 정보
+		 * 
+		 */
 		
 		if (spmsg[0].equals("!권한")&&user.getAsMention().equals("<@363657198347485186>")) {
 			String mem=spmsg[1].replace("<", "").replace(">", "").replace("!", "").replace("@", "");
