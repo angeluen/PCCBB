@@ -24,7 +24,7 @@ public class Main {
 //		jb.addEventListeners(new TListener());
 //		jb.setStatus(OnlineStatus.ONLINE);
 		try {
-			jda = JDABuilder.create("ODMyODQ5NzI3MTQ5NTcyMTE3.YHpxwA.-Hwd5YMPhu942GpmDUYsoj2PmBU", // nUic48pVYIzfgDu5EywsLVSCi0o//
+			jda = JDABuilder.create("ttttt", // nUic48pVYIzfgDu5EywsLVSCi0o//
 					GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS)
 					.setActivity(Activity.of(ActivityType.DEFAULT, "귀여운 막둥이 일")).build();//
 			jda.addEventListener(new TListener());
