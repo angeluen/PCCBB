@@ -1,5 +1,6 @@
 package mainStart;
 
+import java.util.*;
 import java.awt.Color;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import model.Boss_reservation;
 import model.Clan_date;
 import model.Condition;
 import model.User_table;
+import model.DummyBoss;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,6 +28,7 @@ public class TListener extends ListenerAdapter {
 	static int day = 0;
 	static int round;
 	static int named;
+	static Map<String, DummyBoss> BossControl_Data = new HashMap<String, DummyBoss>();
 	
 
 	@Override
@@ -44,6 +47,125 @@ public class TListener extends ListenerAdapter {
 		{
 			tc.sendMessage("헤으응").queue();
 		}
+		// 관제봇 명령어
+		/*
+		 * !손
+		 * !딜량입력 시간 넣은딜(만단위) 개인메세지
+		 * !컷
+		 * !현재상황
+		 * 
+		 * !손취소
+		 * !딜량입력취소
+		 */
+		
+
+		if(spmsg[0].equals("!손"))
+		{
+			
+			if(BossControl_Data.containsKey(user.getAsMention()) == true)
+			{
+				tc.sendMessage(user.getAsMention() + "님 이미 손을 하셨어요").queue();
+				return;
+			}
+			
+			//유저 데이터 등록
+			DummyBoss tempData = new DummyBoss();
+			tempData.setUser_code(user.getAsMention());
+			tempData.setUser_name(user.getName());
+			tempData.setMessage("치는중");
+			tempData.setDamage(0);
+			tempData.setRemain_time(0);
+			
+			BossControl_Data.put(user.getAsMention(), tempData);
+			
+			tc.sendMessage(user.getAsMention() + "님께서 보스에 입장했습니다.").queue();
+		}
+		if(spmsg[0].equals("!딜량입력"))
+		{
+			
+			//4개다 입력안하면 오류로 인식, 메세지 필수인지 아닌지 고민중
+			if(spmsg.length < 4)
+			{
+				tc.sendMessage(user.getAsMention() + "님 잘못 입력하셨습니다. !딜량입력 시간 넣은딜(만단위) 코멘트." + spmsg.length).queue();
+				return; 
+			}
+			
+			// !손 안하고 들어갔으면 입력 안되게 설정
+			if(BossControl_Data.containsKey(user.getAsMention()) == false)
+			{
+				tc.sendMessage(user.getAsMention() + "님... 손은 하고 들어가셔야죠...").queue();
+				return;
+			}
+			
+			// [0] 명령어
+			// [1] 시간
+			// [2] 넣은딜
+			// [3] 개인메세지
+			
+			//값 업데이트. 
+			DummyBoss tempData = new DummyBoss();
+			tempData.setUser_code(user.getAsMention());
+			tempData.setUser_name(user.getName());
+			tempData.setRemain_time(Integer.parseInt(spmsg[1]));
+			tempData.setDamage(Integer.parseInt(spmsg[2]));
+			tempData.setMessage(spmsg[3]);
+			
+			BossControl_Data.put(user.getAsMention(), tempData);
+			tc.sendMessage(user.getAsMention() + "딜량 입력 완료!").queue();
+			return; 
+		}
+		if(spmsg[0].equals("!컷"))
+		{
+			BossControl_Data.clear();
+			tc.sendMessage("보스를 쓰러트렸습니다! 다음 보스를 치실분은 !손 명령어 입력 후 들어가주세요!").queue();
+			return;
+		}
+		if(spmsg[0].equals("!현재상황"))
+		{
+			EmbedBuilder emb = new EmbedBuilder();
+			emb.setTitle("현재 들어간 사람 상황");
+			emb.setColor(Color.yellow);
+			
+			Iterator it = BossControl_Data.values().iterator();
+			
+			while(it.hasNext())
+			{
+				DummyBoss values = (DummyBoss)it.next();
+				
+				if(values.getRemain_time() == 0)
+				{
+					emb.addField(values.getUser_name(), 
+							values.getMessage(), 
+								false);
+				}
+				else
+				{
+					emb.addField(values.getUser_name(), 
+							values.getRemain_time().toString() + "초   "  + 
+						    values.getDamage().toString() + "만    " + 
+							values.getMessage(), 
+								false);
+				}
+				
+			}
+			
+			tc.sendMessage(emb.build()).queue();
+			return;
+		}
+		
+		//========취소 기능 ========//
+		if(spmsg[0].equals("!탈출"))
+		{
+			BossControl_Data.remove(user.getAsMention());
+			tc.sendMessage(user.getAsMention() + "님께서 입장을 취소 하셨습니다.").queue();
+			return; 
+		}
+		if(spmsg[0].equals("!딜량입력취소"))
+		{
+			return;
+		}
+		
+		
 		//soulluna 설정
 		/*
 		 * 	기획의도
